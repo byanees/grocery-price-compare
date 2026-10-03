@@ -18,6 +18,7 @@
 - Q: How should prices older than 24 hours count in basket totals and the cheapest-store suggestions? → A: Count them in store totals with a stale mark, but exclude stale prices when picking the cheapest store or split.
 - Q: Should search also find items typed in Roman Urdu, such as "atta", "cheeni" or "ghee"? → A: Yes. Each item gets English, Urdu-script and Roman Urdu names, and all three are searchable.
 - Q: Who sets each store's delivery fee and minimum order, and how? → A: Read them automatically from store sites.
+- Q: How should the admin receive source health alerts? → A: Listed in the admin area and also sent by email.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -361,7 +362,8 @@ shoppers unnoticed.
   suggested master product, and approve or reject each.
 - **FR-029**: System MUST alert the admin when a store's run returns 0 items, a product's
   price changes by more than 40% between readings, or a store's catalog shrinks by more than
-  20% from the previous day.
+  20% from the previous day. Each alert MUST appear in the admin area and MUST also be sent
+  by email to every admin.
 - **FR-030**: Admins MUST be able to see collection failures and alerts with their time, and
   mark alerts as handled.
 - **FR-031**: Admins MUST be able to set, per store, its delivery cities, whether it prices
@@ -454,8 +456,8 @@ delivery or checkout.
 - **A-010**: Admins are a small, named set of people who sign in. Shoppers never sign in.
   *Source*: requirement §MVP deliverables #11 and "user accounts beyond saved baskets" out
   of scope.
-- **A-011**: Admin alerts appear in the admin area and are also sent by email. *Reasoning*:
-  "the admin is alerted" (requirement MVP deliverables #12) implies notice outside the app.
+- **A-011**: Admin alerts appear in the admin area and are also sent by email to every admin.
+  *Source*: product owner answer 2026-10-03 (see Clarifications).
 - **A-012**: The two-store split is limited to exactly two stores; three or more is out of
   scope. *Source*: requirement MVP deliverables #7.
 - **A-013**: A shared link shows a snapshot of the basket items; prices on the shared page are
