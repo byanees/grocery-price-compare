@@ -1,4 +1,4 @@
-# Development Pipeline Constitution
+# Grocery Price Compare Constitution
 
 ## Core Principles
 
@@ -218,4 +218,4 @@ Stages run in order. Each stage reads the previous stage's artifacts and writes 
 - Compliance is checked at Gates 1–3 for every feature. Recurring violations are a reason
   to amend the constitution or templates.
 
-**Version**: 1.1.0 | **Ratified**: 2026-10-04 | **Last Amended**: 2026-10-04
+**Version**: 1.1.1 | **Ratified**: 2026-10-04 | **Last Amended**: 2026-10-04

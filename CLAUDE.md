@@ -1,7 +1,8 @@
-# Development Pipeline
+# Grocery Price Compare
 
-Spec-driven project built with GitHub Spec Kit. Read `.specify/memory/constitution.md` before doing
-any work. It overrides everything else, including this file.
+Grocery price comparison app, spec-driven with GitHub Spec Kit. Read
+`.specify/memory/constitution.md` before doing any work. It overrides everything else,
+including this file.
 
 ## Pipeline
 
