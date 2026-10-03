@@ -16,6 +16,7 @@
 
 - Q: If a store's terms of service forbid automated price reading, what should happen? → A: Skip that store; if fewer than 5 permitted stores remain, stop and ask the product owner before launch.
 - Q: How should prices older than 24 hours count in basket totals and the cheapest-store suggestions? → A: Count them in store totals with a stale mark, but exclude stale prices when picking the cheapest store or split.
+- Q: Should search also find items typed in Roman Urdu, such as "atta", "cheeni" or "ghee"? → A: Yes. Each item gets English, Urdu-script and Roman Urdu names, and all three are searchable.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -149,23 +150,25 @@ hand. Check both suggestions and the stated savings.
 ### User Story 5 - Use the app in Urdu or English (Priority: P5)
 
 A shopper can switch the whole interface between Urdu and English and find any of the 300
-items by typing its name in either language.
+items by typing its name in English, Urdu script or Roman Urdu.
 
 **Why this priority**: Local fit (requirement §Features) and a key difference from
 LowPrice.pk, but Story 1 works without it.
 
-**Independent Test**: For every one of the 300 items, search by its English name and its
-Urdu name and check it is returned in the results.
+**Independent Test**: For every one of the 300 items, search by its English, Urdu-script
+and Roman Urdu names and check it is returned in the results.
 
 **Acceptance Scenarios**:
 
 1. **Given** the interface is in English, **When** the user switches to Urdu, **Then** all
    interface text appears in Urdu with right-to-left layout, and the choice is remembered.
-2. **Given** any of the 300 items, **When** the user types its Urdu name, **Then** the item
+2. **Given** any of the 300 items, **When** the user types its Urdu-script name, **Then** the item
    appears in the results.
 3. **Given** any of the 300 items, **When** the user types its English name, **Then** the
    item appears in the results.
-4. **Given** a search with no matches, **When** results show, **Then** the app says nothing
+4. **Given** any of the 300 items, **When** the user types its Roman Urdu name (for example
+   "cheeni" for sugar), **Then** the item appears in the results.
+5. **Given** a search with no matches, **When** results show, **Then** the app says nothing
    matched and suggests checking the spelling or trying the other language.
 
 ---
@@ -300,8 +303,9 @@ shoppers unnoticed.
 
 **Search**
 
-- **FR-014**: Users MUST be able to find any of the 300 products by its English or Urdu
-  name.
+- **FR-014**: Users MUST be able to find any of the 300 products by its English name, its
+  Urdu-script name, or its Roman Urdu name (Urdu written in English letters, for example
+  "atta", "cheeni").
 
 **Basket and comparison**
 
@@ -366,7 +370,8 @@ delivery or checkout.
   value, a flag for pricing by city, a flag for whether collection is permitted, and a
   request rate limit.
 - **Master product**: One canonical staple (for example Dalda cooking oil, 5 L, 1 pack). Has
-  brand, product type, size, unit, pack count, barcode if known, English name, Urdu name.
+  brand, product type, size, unit, pack count, barcode if known, English name, Urdu-script
+  name, Roman Urdu name.
 - **Store listing**: A product as a store sells it. Has the store's own name, barcode if
   given, parsed size and unit, and a link to one master product with its match status
   (automatic, pending review, approved, rejected).
@@ -390,7 +395,8 @@ delivery or checkout.
 - **SC-002**: The comparison for a 40-item basket appears within 2 seconds of opening it on a
   typical mobile connection.
 - **SC-003**: At least 5 chains have prices updated within the last 24 hours on 95% of days.
-- **SC-004**: 100% of the 300 catalog items are found by both their English and Urdu names.
+- **SC-004**: 100% of the 300 catalog items are found by their English, Urdu-script and
+  Roman Urdu names.
 - **SC-005**: In an audit sample of 200 links shown to shoppers, at least 98% are correct
   (same product, same size, same pack count).
 - **SC-006**: 100% of displayed prices carry an update time, and every price older than 24
@@ -424,7 +430,7 @@ delivery or checkout.
   deliverables #5) rules out server accounts.
 - **A-007**: "Urdu and English" means both the interface and product names, with a language
   switch. *Source*: requirement §Features, "Urdu and English".
-- **A-008**: Urdu names for the 300 products are written by hand as part of building the
+- **A-008**: Urdu-script and Roman Urdu names for the 300 products are written by hand as part of building the
   master catalog. *Source*: requirement §Product matching, "300 hand-verified basket items".
 - **A-009**: Fuzzy text and image similarity scoring (requirement §Product matching, step 3)
   is not used for automatic linking in this MVP; everything that is not an exact barcode or
