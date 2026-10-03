@@ -10,6 +10,12 @@
 
 **Source document**: `requirement.md` (Grocery Price Compare — Product Plan, Oct 2, 2026). Section references below (for example "MVP deliverables #6") point to that file.
 
+## Clarifications
+
+### Session 2026-10-03
+
+- Q: If a store's terms of service forbid automated price reading, what should happen? → A: Skip that store; if fewer than 5 permitted stores remain, stop and ask the product owner before launch.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Compare my basket across stores in my city (Priority: P1)
@@ -279,7 +285,9 @@ shoppers unnoticed.
 - **FR-010**: System MUST store every price reading with its reading time, and its city for
   stores flagged as pricing by city. Readings MUST never be overwritten or deleted.
 - **FR-011**: Collection MUST read only pages that need no login, MUST respect a per-store
-  request rate limit, and MUST skip any store marked as not permitted.
+  request rate limit, and MUST skip any store marked as not permitted. A store whose terms
+  of service forbid automated reading MUST be marked not permitted. If fewer than 5
+  permitted stores remain, launch MUST stop until the product owner decides.
 - **FR-012**: Every price shown MUST be labelled "online price, updated <time>". A price
   whose latest reading is more than 24 hours old MUST also be marked stale.
 - **FR-013**: The app MUST state plainly that in-store shelf prices may differ.
@@ -391,7 +399,8 @@ delivery or checkout.
 - **A-001**: Prices are one national price per product per store unless a store is flagged as
   pricing by city. *Source*: requirement §Stores to cover, "Pricing model".
 - **A-002**: The MVP stores are Carrefour, Al-Fatah, Naheed, Metro, Chase Up, GrocerApp and
-  Daraz grocery; at least 5 must be live. *Source*: requirement §Daily price collection, MVP.
+  Daraz grocery; at least 5 must be live, counting only stores whose terms permit automated
+  reading (see Clarifications). *Source*: requirement §Daily price collection, MVP.
 - **A-003**: Delivery fee and minimum order are a fixed amount per store (per city where a
   store charges differently by city), entered and maintained by an admin rather than
   collected automatically. *Reasoning*: these rarely appear in product catalogs and change
