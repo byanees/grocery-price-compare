@@ -17,6 +17,7 @@
 - Q: If a store's terms of service forbid automated price reading, what should happen? → A: Skip that store; if fewer than 5 permitted stores remain, stop and ask the product owner before launch.
 - Q: How should prices older than 24 hours count in basket totals and the cheapest-store suggestions? → A: Count them in store totals with a stale mark, but exclude stale prices when picking the cheapest store or split.
 - Q: Should search also find items typed in Roman Urdu, such as "atta", "cheeni" or "ghee"? → A: Yes. Each item gets English, Urdu-script and Roman Urdu names, and all three are searchable.
+- Q: Who sets each store's delivery fee and minimum order, and how? → A: Read them automatically from store sites.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -45,7 +46,8 @@ city, add items, and check each store total against a hand-calculated expected v
 4. **Given** a user searches "cooking oil" in English, **When** results appear, **Then** each
    result shows its pack size and its price per kg, litre or piece.
 5. **Given** a basket of 3 items with quantities, **When** the user opens the comparison,
-   **Then** each store shows the sum of (price × quantity) plus its delivery fee, and the
+   **Then** each store shows the sum of (price × quantity) plus its delivery fee (0 if the
+   subtotal reaches the store's free-delivery threshold), and the
    stores are sorted from cheapest to most expensive total.
 6. **Given** a store that does not sell one of the basket items, **When** the comparison
    shows, **Then** that store's total is marked incomplete and names the missing items.
@@ -269,7 +271,14 @@ shoppers unnoticed.
 - **FR-001**: System MUST let a user pick a city from the list of cities that at least one
   store delivers to, and MUST remember it on that device.
 - **FR-002**: System MUST keep, for each store, the list of cities it delivers to, its
-  delivery fee, and its minimum order value.
+  delivery fee, and its minimum order value (per city where a store sets them by city).
+- **FR-002a**: System MUST read each store's delivery fee, minimum order and any
+  free-delivery threshold from the store's public site at least once a day, and keep each
+  reading with its time, like prices (FR-010).
+- **FR-002b**: If a store's delivery fee or minimum order cannot be read, the system MUST use
+  the last successful reading and mark it stale after 24 hours. If no reading exists, that
+  store's total MUST say "delivery fee unknown", and the store MUST be left out of
+  cheapest-store and split suggestions.
 - **FR-003**: Comparisons MUST include only stores that deliver to the user's selected city,
   and MUST show how many stores that is.
 
@@ -355,8 +364,9 @@ shoppers unnoticed.
   20% from the previous day.
 - **FR-030**: Admins MUST be able to see collection failures and alerts with their time, and
   mark alerts as handled.
-- **FR-031**: Admins MUST be able to set, per store, its delivery cities, delivery fee,
-  minimum order, whether it prices by city, and whether collection is permitted.
+- **FR-031**: Admins MUST be able to set, per store, its delivery cities, whether it prices
+  by city, and whether collection is permitted. Delivery fees and minimum orders are read
+  automatically (FR-002a), not entered by admins.
 
 **Out of scope for this feature** (requirement §MVP deliverables): price-drop alerts, deals
 feed, affiliate or "order on store" links, app-only stores (pandamart, inDrive.Groceries),
@@ -366,9 +376,9 @@ delivery or checkout.
 ### Key Entities
 
 - **City**: A place a user can select. Has an English and an Urdu name.
-- **Store**: An online grocery chain. Has its delivery cities, delivery fee, minimum order
-  value, a flag for pricing by city, a flag for whether collection is permitted, and a
-  request rate limit.
+- **Store**: An online grocery chain. Has its delivery cities, delivery fee, minimum order,
+  free-delivery threshold if any (all read from its site, with reading time), a flag for
+  pricing by city, a flag for whether collection is permitted, and a request rate limit.
 - **Master product**: One canonical staple (for example Dalda cooking oil, 5 L, 1 pack). Has
   brand, product type, size, unit, pack count, barcode if known, English name, Urdu-script
   name, Roman Urdu name.
@@ -415,10 +425,14 @@ delivery or checkout.
 - **A-002**: The MVP stores are Carrefour, Al-Fatah, Naheed, Metro, Chase Up, GrocerApp and
   Daraz grocery; at least 5 must be live, counting only stores whose terms permit automated
   reading (see Clarifications). *Source*: requirement §Daily price collection, MVP.
-- **A-003**: Delivery fee and minimum order are a fixed amount per store (per city where a
-  store charges differently by city), entered and maintained by an admin rather than
-  collected automatically. *Reasoning*: these rarely appear in product catalogs and change
-  rarely. *Source*: requirement §Features, "Delivery fee and minimum order included".
+- **A-003**: Delivery fee, minimum order and free-delivery threshold are read automatically
+  from each store's public site (see Clarifications). When the basket subtotal reaches a
+  store's free-delivery threshold, its delivery fee counts as 0. *Source*: requirement
+  §Features, "Delivery fee and minimum order included"; product owner answer 2026-10-03.
+- **A-016**: When a store's delivery fee or minimum order cannot be read, the last good
+  reading is used, then marked stale after 24 hours, matching the price freshness rule
+  (FR-012). *Reasoning*: keeps fees and prices under one freshness rule. *Source*:
+  requirement §Stores to cover, "Price label".
 - **A-004**: The price used is the price a customer pays now on the store's site, including
   any sale price shown. *Reasoning*: the comparison answers "cheapest today". *Source*:
   requirement §MVP deliverables, summary line.
