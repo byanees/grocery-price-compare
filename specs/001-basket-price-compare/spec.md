@@ -15,6 +15,7 @@
 ### Session 2026-10-03
 
 - Q: If a store's terms of service forbid automated price reading, what should happen? → A: Skip that store; if fewer than 5 permitted stores remain, stop and ask the product owner before launch.
+- Q: How should prices older than 24 hours count in basket totals and the cheapest-store suggestions? → A: Count them in store totals with a stale mark, but exclude stale prices when picking the cheapest store or split.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -139,6 +140,9 @@ hand. Check both suggestions and the stated savings.
    suggestions are calculated, **Then** that split is not offered.
 4. **Given** no two-store split beats the single-store option, **When** suggestions show,
    **Then** the app says the single store is cheapest and offers no split.
+5. **Given** a store whose price for a basket item is more than 24 hours old, **When**
+   suggestions are calculated, **Then** that item counts as unavailable at that store, while
+   the store's total in the comparison still includes it and is marked stale.
 
 ---
 
@@ -289,7 +293,9 @@ shoppers unnoticed.
   of service forbid automated reading MUST be marked not permitted. If fewer than 5
   permitted stores remain, launch MUST stop until the product owner decides.
 - **FR-012**: Every price shown MUST be labelled "online price, updated <time>". A price
-  whose latest reading is more than 24 hours old MUST also be marked stale.
+  whose latest reading is more than 24 hours old MUST also be marked stale. Stale prices
+  count in store totals (FR-017), and a total that includes any stale price MUST be marked
+  stale.
 - **FR-013**: The app MUST state plainly that in-store shelf prices may differ.
 
 **Search**
@@ -316,6 +322,8 @@ shoppers unnoticed.
 - **FR-021**: System MUST find the cheapest assignment of basket items across any two
   delivering stores, counting both delivery fees and requiring each store to meet its
   minimum order, and MUST show it only when it is cheaper than the cheapest single store.
+- **FR-021a**: When picking the cheapest single store or two-store split, an item whose
+  price at a store is stale MUST be treated as unavailable at that store.
 - **FR-022**: Each suggestion MUST show its item list per store, its total, and its saving
   versus the cheapest single store.
 
